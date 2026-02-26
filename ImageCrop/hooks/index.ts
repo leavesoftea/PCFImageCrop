@@ -15,3 +15,4 @@ export * from "./useRotation";
 export * from "./useScaling";
 export * from "./useImageLoaded"
 export * from "./useDefaultCrop";
+export * from "./useImageViewTransform";

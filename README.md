@@ -11,6 +11,7 @@ The Image Cropper control provides a modern, accessible, and highly configurable
 ## Features
 
 - Crop images with drag-and-resize UI
+- **Pan and zoom**: drag to pan the image, mouse wheel to zoom (desktop), pinch-to-zoom on touch; image always fills the crop viewport (no empty space)
 - Lock aspect ratio or allow freeform cropping
 - Rotate and scale images
 - Circular/elliptical crop support
@@ -68,6 +69,15 @@ Add the Image Cropper control to your form or app and configure the required pro
 |--------------|--------------------|---------------------------------------------|
 | imageOutput  | Multiple Lines Text | Cropped image as base64 PNG (data URL)      |
 | actionOutput | Object             | The most recent action and its data         |
+
+## Pan and zoom
+
+The control supports smooth pan and zoom while keeping the crop rectangle semantics unchanged.
+
+- **Initial fit**: When an image loads (or the container resizes), the image is scaled to **cover** the entire crop viewport (like CSS `object-fit: cover`) and centered. There is never blank space inside the crop box initially.
+- **Pan**: Drag (mouse or touch) to move the image underneath the crop viewport. Panning is **constrained** so the image always fully covers the viewport—you cannot pan far enough to reveal empty background inside the crop area.
+- **Zoom**: Mouse wheel (desktop) zooms toward the pointer. Pinch with two fingers on touch devices zooms toward the pinch center. Zoom is clamped: minimum scale is the “cover” scale (viewport always filled), maximum is 8× that scale. Zoom is anchored so the point under the cursor/pinch stays fixed.
+- **Rendering**: The image is clipped to the viewport (`overflow: hidden`). No new optional properties were added; behavior is backward compatible.
 
 ## Advanced Usage
 
