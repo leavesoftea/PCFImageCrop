@@ -43,6 +43,21 @@
   <data name="ImageCrop_CircularCrop_DisplayName" xml:space="preserve">
     <value>Circular Crop</value>
   </data>
+  <data name="ImageCrop_ShowCropByDefault_DisplayName" xml:space="preserve">
+    <value>Show crop by default</value>
+  </data>
+  <data name="ImageCrop_EnableCropping_DisplayName" xml:space="preserve">
+    <value>Enable cropping</value>
+  </data>
+  <data name="ImageCrop_EnablePanImage_DisplayName" xml:space="preserve">
+    <value>Enable pan image</value>
+  </data>
+  <data name="ImageCrop_UseShiftToPanImage_DisplayName" xml:space="preserve">
+    <value>Use Shift to pan image</value>
+  </data>
+  <data name="ImageCrop_EnableDragDropLoad_DisplayName" xml:space="preserve">
+    <value>Enable drag-and-drop image load</value>
+  </data>
   <data name="ImageCrop_ImageInput_DisplayName" xml:space="preserve">
     <value>Image Input (Base64)</value>
   </data>
@@ -50,7 +65,7 @@
     <value>Image Output (Base64)</value>
   </data>
   <data name="ImageCrop_DisplayName" xml:space="preserve">
-    <value>RAW! Image Crop</value>
+    <value>Eurasia Image Crop</value>
   </data>
   <data name="ImageCrop_Rotation_DisplayName" xml:space="preserve">
     <value>Rotation (degrees)</value>
@@ -89,6 +104,21 @@
   <data name="ImageCrop_CircularCrop_Description" xml:space="preserve">
     <value>Show the crop area as a circle. If aspect is not 1, the circle will be an oval.</value>
   </data>
+  <data name="ImageCrop_ShowCropByDefault_Description" xml:space="preserve">
+    <value>If true (legacy), the crop box is shown when the control loads. If false, only pan/zoom is shown until the user clicks Crop.</value>
+  </data>
+  <data name="ImageCrop_EnableCropping_Description" xml:space="preserve">
+    <value>When true, shows crop rectangle/overlay and enables crop interactions.</value>
+  </data>
+  <data name="ImageCrop_EnablePanImage_Description" xml:space="preserve">
+    <value>When true, allows panning the image (subject to Use Shift to pan image).</value>
+  </data>
+  <data name="ImageCrop_UseShiftToPanImage_Description" xml:space="preserve">
+    <value>When true, panning only works while Shift is held. When false, panning works without Shift (if Enable pan image is true).</value>
+  </data>
+  <data name="ImageCrop_EnableDragDropLoad_Description" xml:space="preserve">
+    <value>Allow users to drag an image file from their computer onto the control (web only).</value>
+  </data>
   <data name="ImageCrop_ImageInput_Description" xml:space="preserve">
     <value>The Base64 content of the image to be cropped.</value>
   </data>
@@ -115,6 +145,12 @@
   </data>
   <data name="ImageCrop_ActionSchema_Description" xml:space="preserve">
     <value>Defines the schema for the action output object (internal use).</value>
+  </data>
+  <data name="ImageCrop_ZoomMultiplier_DisplayName" xml:space="preserve">
+    <value>Zoom multiplier</value>
+  </data>
+  <data name="ImageCrop_ZoomMultiplier_Description" xml:space="preserve">
+    <value>Current zoom multiplier relative to baseScale (0.4–3.0). Bind to a Slider to sync zoom bi-directionally.</value>
   </data>
   <!-- Default Crop Properties Display Names -->
   <data name="ImageCrop_DefaultUnit_DisplayName" xml:space="preserve">

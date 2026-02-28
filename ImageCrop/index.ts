@@ -18,6 +18,7 @@ export class ImageCrop implements ComponentFramework.StandardControl<IInputs, IO
     private _actionCropComplete: boolean;
     private _cropResults: string | undefined;
     private _actionOutput: { action: string, x: number, y: number } | null;
+    private _zoomMultiplier: number;
 
     /**
      * Empty constructor.
@@ -48,6 +49,7 @@ export class ImageCrop implements ComponentFramework.StandardControl<IInputs, IO
         this._container.style.height = "100%";
         this._instanceId = uuidv4();
         this._reactRoot = ReactDOM.createRoot(this._container);
+        this._zoomMultiplier = 1;
     }
 
     /**
@@ -76,6 +78,7 @@ export class ImageCrop implements ComponentFramework.StandardControl<IInputs, IO
                 onDragStart: this.onDragStart.bind(this),
                 onDragEnd: this.onDragEnd.bind(this),
                 onCropComplete: this.onCropComplete.bind(this),
+                onZoomMultiplierChange: this.onZoomMultiplierChange.bind(this),
             })
         );
     }
@@ -122,6 +125,14 @@ export class ImageCrop implements ComponentFramework.StandardControl<IInputs, IO
     };
 
     /**
+     * Callback when zoom multiplier changes (wheel, pinch, or host scaling). Updates output and notifies host.
+     */
+    public onZoomMultiplierChange = (value: number) => {
+        this._zoomMultiplier = value;
+        this._notifyOutputChanged();
+    };
+
+    /**
      * It is called by the framework prior to a control receiving new data.
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as "bound" or "output"
      */
@@ -141,6 +152,8 @@ export class ImageCrop implements ComponentFramework.StandardControl<IInputs, IO
             output.actionOutput = this._actionOutput;
             this._actionOutput = null;
         }
+
+        output.zoomMultiplier = this._zoomMultiplier;
        
         return output;
     }

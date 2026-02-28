@@ -9,8 +9,9 @@ export interface ViewTransform {
   translateY: number;
 }
 
-/** Minimum scale = cover (viewport always filled). Max scale multiple over cover (e.g. 8x). */
-const MAX_SCALE_MULTIPLE = 8;
+/** Zoom range as multiplier of baseScale (cover-fit scale). minScale = baseScale * MIN_ZOOM_MULTIPLIER, maxScale = baseScale * MAX_ZOOM_MULTIPLIER. */
+const MIN_ZOOM_MULTIPLIER = 0.4;
+const MAX_ZOOM_MULTIPLIER = 3.0;
 
 /**
  * Compute scale so the image "covers" the viewport (like CSS object-fit: cover).
@@ -46,9 +47,11 @@ export function getCenterTranslation(
 }
 
 /**
- * Clamp translation so the image always covers the viewport (no empty space).
- * Image rect in viewport: [translateX, translateY, translateX + imgW*scale, translateY + imgH*scale].
- * We need: translateX <= 0, translateY <= 0, translateX + imgW*scale >= viewportW, translateY + imgH*scale >= viewportH.
+ * Clamp translation so the image always covers the viewport (no blank space).
+ * Image rendered size: rw = imgW*scale, rh = imgH*scale. Image top-left at (tx, ty).
+ * To cover viewport: tx <= 0, tx + rw >= viewportW => tx >= viewportW - rw. So tx in [viewportW - rw, 0].
+ * Same for y: ty in [viewportH - rh, 0]. Formula: clamp(tx, viewportW - rw, 0).
+ * (At minScale=coverScale we have rw >= viewportW, rh >= viewportH; if rw < viewportW, center tx.)
  */
 export function clampTranslation(
   viewportW: number,
@@ -59,29 +62,45 @@ export function clampTranslation(
   translateX: number,
   translateY: number
 ): { translateX: number; translateY: number } {
-  const scaledW = imgW * scale;
-  const scaledH = imgH * scale;
-  const minX = viewportW - scaledW;
-  const minY = viewportH - scaledH;
+  const rw = imgW * scale;
+  const rh = imgH * scale;
+  let minX = viewportW - rw;
+  let maxX = 0;
+  let minY = viewportH - rh;
+  let maxY = 0;
+  if (rw < viewportW) {
+    minX = maxX = (viewportW - rw) / 2;
+  }
+  if (rh < viewportH) {
+    minY = maxY = (viewportH - rh) / 2;
+  }
   return {
-    translateX: Math.max(minX, Math.min(0, translateX)),
-    translateY: Math.max(minY, Math.min(0, translateY)),
+    translateX: Math.max(minX, Math.min(maxX, translateX)),
+    translateY: Math.max(minY, Math.min(maxY, translateY)),
   };
 }
 
 /**
- * Get min (cover) and max scale for the viewport and image.
+ * Get min and max scale for zoom. baseScale = cover-fit scale (image fills control, centered).
+ * Zoom bounds: minScale = baseScale * 0.4, maxScale = baseScale * 3.0.
+ * clamp(v, min, max) = Math.max(min, Math.min(max, v)).
  */
 export function getScaleLimits(
   viewportW: number,
   viewportH: number,
   imgW: number,
   imgH: number
-): { minScale: number; maxScale: number } {
-  const minScale = getCoverScale(viewportW, viewportH, imgW, imgH);
+): { minScale: number; maxScale: number; baseScale: number } {
+  if (viewportW <= 0 || viewportH <= 0 || imgW <= 0 || imgH <= 0) {
+    return { minScale: 0.001, maxScale: 8, baseScale: 1 };
+  }
+  const baseScale = getCoverScale(viewportW, viewportH, imgW, imgH);
+  const minScale = baseScale * MIN_ZOOM_MULTIPLIER;
+  const maxScale = baseScale * MAX_ZOOM_MULTIPLIER;
   return {
     minScale,
-    maxScale: minScale * MAX_SCALE_MULTIPLE,
+    maxScale,
+    baseScale,
   };
 }
 

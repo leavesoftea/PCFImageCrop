@@ -11,6 +11,8 @@ export interface IImageCropControlProps extends Partial<ReactCropProps> {
     onDragStart: (e: PointerEvent) => void;
     onDragEnd: (e: PointerEvent) => void;
     onCropComplete: (results: string) => void;
+    /** Called when zoom multiplier changes (wheel/pinch/host); used to sync ZoomMultiplier output */
+    onZoomMultiplierChange?: (value: number) => void;
 }
 
 export const blankCrop: Crop = {

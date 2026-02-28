@@ -6,6 +6,7 @@ import { stripQuotes } from "../utils/stringUtils";
 
 /**
  * Custom hook to track the image source and apply crop logic on load or failure.
+ * Supports an optional drop override: when set (e.g. from drag-and-drop), that source is used until context image changes.
  */
 export function useImageSrc(
   context: ComponentFramework.Context<IInputs>,
@@ -13,33 +14,36 @@ export function useImageSrc(
   defaultCrop: Crop | undefined,
   setCrop: (crop: Crop | undefined) => void,
   setCompletedCrop: (crop: PixelCrop) => void
-): string | undefined {
-  const rawSrc = stripQuotes(context.parameters.imageInput?.raw || undefined);
-  const [imageSrc, setImageSrc] = useState<string | undefined>(rawSrc);
+): { imageSrc: string | undefined; setImageSrcFromDrop: (src: string) => void } {
+  const contextSrc = stripQuotes(context.parameters.imageInput?.raw || undefined);
+  const [dropOverride, setDropOverride] = useState<string | undefined>(undefined);
+
+  // When host sets a new image, clear drop override so context value is used
+  useEffect(() => {
+    setDropOverride(undefined);
+  }, [context.parameters.imageInput?.raw]);
+
+  const effectiveSrc = dropOverride ?? contextSrc;
 
   useEffect(() => {
-    const cleanSrc = stripQuotes(context.parameters.imageInput?.raw || undefined);
-    setImageSrc(cleanSrc);
-
     const img = imgRef.current;
     const fallbackCrop = defaultCrop ?? blankCrop;
 
-    if (!img || !cleanSrc) {
-      // No image reference available
-      setCrop(undefined);
-      setCompletedCrop(convertToPixelCrop({...blankCrop}, 0,0));
+    if (!img || !effectiveSrc) {
+      if (!effectiveSrc) {
+        setCrop(undefined);
+        setCompletedCrop(convertToPixelCrop({...blankCrop}, 0,0));
+      }
       return;
     }
 
     const applyCrop = () => {
       if (img.complete && img.naturalWidth > 0) {
-        // Valid image loaded
         setCrop(defaultCrop);
         setCompletedCrop(
           convertToPixelCrop(fallbackCrop, img.width, img.height)
         );
       } else {
-        // Image is missing or broken
         setCrop(undefined);
         setCompletedCrop({
           unit: "px",
@@ -51,10 +55,8 @@ export function useImageSrc(
       }
     };
 
-    // Try immediately
     applyCrop();
 
-    // Listen for load/error events
     const onLoad = () => applyCrop();
     const onError = () => {
       setCrop(undefined);
@@ -68,7 +70,7 @@ export function useImageSrc(
       img.removeEventListener("load", onLoad);
       img.removeEventListener("error", onError);
     };
-  }, [context.parameters.imageInput?.raw, defaultCrop]);
+  }, [effectiveSrc, defaultCrop]);
 
-  return imageSrc;
+  return { imageSrc: effectiveSrc, setImageSrcFromDrop: setDropOverride };
 }
