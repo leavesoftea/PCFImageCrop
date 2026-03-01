@@ -26,6 +26,17 @@ const SHOW_EXPORT_DEBUG = false;
 /** Set true to log cropRect + transform used in preview (compare with overlay); set false and remove after confirming. */
 const SHOW_PREVIEW_STATE_DEBUG = false;
 
+/** Fill canvas with background color when non-empty; invalid CSS color falls back to no fill (transparent). */
+function applyExportBackground(ctx: CanvasRenderingContext2D, w: number, h: number, bg: string): void {
+  if (bg === "") return;
+  try {
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+  } catch {
+    // Invalid CSS color; leave transparent
+  }
+}
+
 /**
  * Custom hook to convert a cropped region of an image to a base64 PNG string.
  * Two modes:
@@ -41,8 +52,10 @@ export function useCropToBase64(
   circularCrop = false,
   viewportCrop?: ViewportCrop,
   transform?: ViewportTransform,
-  exportStateRef?: ExportStateRef
+  exportStateRef?: ExportStateRef,
+  exportBackgroundColor = ""
 ) {
+  const bg = (exportBackgroundColor ?? "").trim();
   useEffect(() => {
     const image = imgRef.current;
     if (!image) {
@@ -88,6 +101,7 @@ export function useCropToBase64(
         ctx.imageSmoothingQuality = "high";
 
         ctx.clearRect(0, 0, w, h);
+        applyExportBackground(ctx, w, h, bg);
 
         const dx = t.translateX - x;
         const dy = t.translateY - y;
@@ -158,6 +172,8 @@ export function useCropToBase64(
     if (!ctx) return;
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    applyExportBackground(ctx, canvas.width, canvas.height, bg);
     ctx.scale(pixelRatio, pixelRatio);
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
@@ -206,6 +222,7 @@ export function useCropToBase64(
     viewportCrop,
     transform,
     exportStateRef,
+    bg,
     viewportCrop?.x,
     viewportCrop?.y,
     viewportCrop?.width,

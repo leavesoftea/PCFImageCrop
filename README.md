@@ -66,6 +66,7 @@ Add the Image Cropper control to your form or app and configure the required pro
 | useShiftToPanImage  | input    | TwoOptions       | No       | false   | When true, panning only works while Shift is held; when false, pan works without Shift if enablePanImage is true. |
 | enableDragDropLoad  | input    | TwoOptions       | No       | false   | When true, allows dropping an image file from the computer onto the control (web only). |
 | clearToken          | input    | Whole Number     | No       | 0       | Increment this value to clear/reset the control (e.g. Clear button: Set(varClearToken, varClearToken + 1)). |
+| exportBackgroundColor | input  | SingleLine.Text  | No       | (empty) | Optional color for empty regions in the exported imageOutput. In Power Apps use RGBA(), Color.Black, ColorValue(), or theme colors (no quotes). Leave blank for transparent. |
 | actionSchema        | bound    | SingleLine.Text  | No       |         | Defines the schema for the action output object (hidden)         |
 
 ### Output Properties
@@ -126,6 +127,19 @@ When the user drops an image, the control sets **Dropped image (Base64)** and in
   `If(ImageCrop1.dropToken <> varLastDropToken, Set(varLastDropToken, ImageCrop1.dropToken); Set(varBase64, ImageCrop1.droppedImageBase64);)`
 
 This copies **droppedImageBase64** into **varBase64** when a new drop is detected.
+
+### Export background color
+
+**exportBackgroundColor** (input, SingleLine.Text, default empty) optionally fills empty regions in the exported **imageOutput** PNG (e.g. letterbox bars when the crop window extends outside the image). Default is transparent (leave blank or use `Transparent`).
+
+In Power Apps, bind to a color value **without quotes** so makers can use the color picker or formulas:
+
+- `RGBA(0,0,0,1)` — black
+- `Color.Black`, `Color.White`
+- `ColorValue("#222222")` — hex
+- `App.Theme.Colors.Primary` — theme color
+
+Invalid or unsupported values are ignored and export remains transparent.
 
 ## Drag-and-drop (web)
 

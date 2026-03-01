@@ -10,6 +10,7 @@ export * from "./useEnableCropping";
 export * from "./useEnablePanImage";
 export * from "./useShiftToPanImage";
 export * from "./useEnableDragDropLoad";
+export * from "./useExportBackgroundColor";
 export * from "./useRuleOfThirds";
 export * from "./useCircularCrop";
 export * from "./useDisabled";

@@ -125,6 +125,12 @@
   <data name="ImageCrop_ClearToken_Description" xml:space="preserve">
     <value>Increment this value to clear/reset the control. Use with a Clear button (e.g. Set(varClearToken, varClearToken + 1)).</value>
   </data>
+  <data name="ImageCrop_ExportBackgroundColor_DisplayName" xml:space="preserve">
+    <value>Export background color</value>
+  </data>
+  <data name="ImageCrop_ExportBackgroundColor_Description" xml:space="preserve">
+    <value>Optional color to fill empty regions in the exported imageOutput. In Power Apps use RGBA(), Color.Black, ColorValue(), or theme colors (no quotes). Leave blank for transparent.</value>
+  </data>
   <data name="ImageCrop_ImageInput_Description" xml:space="preserve">
     <value>The Base64 content of the image to be cropped. Default is a 1x1 transparent PNG placeholder for stable init and drop zone.</value>
   </data>

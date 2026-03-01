@@ -24,6 +24,7 @@ import {
     useEnablePanImage,
     useShiftToPanImage,
     useEnableDragDropLoad,
+    useExportBackgroundColor,
     useImageViewTransform,
     type ViewportCrop,
     type ViewportTransform,
@@ -432,6 +433,7 @@ const ImageCropControl: React.FC<IImageCropControlProps> = (props) => {
     const keepSelection = useKeepSelection(pcfContext.context);
     // Get the rotation property from PCF context
     const rotation = useRotation(pcfContext.context);
+    const exportBackgroundColor = useExportBackgroundColor(pcfContext.context);
 
     const showControl = pcfContext.isVisible();
     const usePanZoom = Boolean(showControl && isTransformReady);
@@ -561,7 +563,8 @@ const ImageCropControl: React.FC<IImageCropControlProps> = (props) => {
         circularCrop,
         viewportCropForExport,
         transformForExport,
-        exportStateRef
+        exportStateRef,
+        exportBackgroundColor
     );
 
     return (
