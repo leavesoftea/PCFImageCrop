@@ -138,8 +138,16 @@ const ImageCropControl: React.FC<IImageCropControlProps> = (props) => {
 
     // Get the default crop object (not a hook)
     const defaultCrop = useDefaultCrop(pcfContext.context);
-    // Get the image from the PCF context property (and optional drop override)
-    const { imageSrc, setImageSrcFromDrop } = useImageSrc(pcfContext.context, imgRef, defaultCrop, setCrop, setCompletedCrop);
+    // Source priority: override (drop) > host image > internal drop > empty. Clearing only via clearToken; host image change clears override.
+    const { imageSrc, isRealImageSource } = useImageSrc(
+        pcfContext.context,
+        imgRef,
+        defaultCrop,
+        setCrop,
+        setCompletedCrop,
+        props.internalImageDataUrl ?? undefined,
+        props.overrideHostImage ?? false
+    );
 
     const enableDragDropLoad = useEnableDragDropLoad(pcfContext.context);
     const [isDraggingOver, setIsDraggingOver] = React.useState(false);
@@ -203,8 +211,13 @@ const ImageCropControl: React.FC<IImageCropControlProps> = (props) => {
         const img = imgRef.current;
         if (img && img.naturalWidth > 0 && img.naturalHeight > 0) {
             setNaturalSize({ width: img.naturalWidth, height: img.naturalHeight });
+            if (isRealImageSource) props.onImageLoadedChange?.(true);
         }
-    }, []);
+    }, [isRealImageSource, props.onImageLoadedChange]);
+
+    const handleImageError = React.useCallback(() => {
+        props.onImageLoadedChange?.(false);
+    }, [props.onImageLoadedChange]);
 
     // Reset natural size when image src changes so we re-fit on new image
     React.useEffect(() => {
@@ -297,14 +310,14 @@ const ImageCropControl: React.FC<IImageCropControlProps> = (props) => {
             const reader = new FileReader();
             reader.onload = () => {
                 const dataUrl = typeof reader.result === "string" ? reader.result : undefined;
-                if (dataUrl) setImageSrcFromDrop(dataUrl);
+                if (dataUrl) props.onDropSuccess?.(dataUrl);
             };
             reader.onerror = () => {
                 if (typeof console !== "undefined" && console.warn) console.warn("[ImageCrop] Failed to read dropped file.");
             };
             reader.readAsDataURL(file);
         },
-        [enableDragDropLoad, setImageSrcFromDrop]
+        [enableDragDropLoad, props.onDropSuccess]
     );
 
     // Pan is active only when enablePanImage and (no Shift required or Shift is down).
@@ -420,7 +433,7 @@ const ImageCropControl: React.FC<IImageCropControlProps> = (props) => {
     // Get the rotation property from PCF context
     const rotation = useRotation(pcfContext.context);
 
-    const showControl = imageSrc && pcfContext.isVisible();
+    const showControl = pcfContext.isVisible();
     const usePanZoom = Boolean(showControl && isTransformReady);
 
     // When cropping is enabled and there is no crop yet, init to default 200x200 centered (or defaultCrop/completedCrop). Preserve crop when disabling so re-enable returns to prior selection.
@@ -632,32 +645,36 @@ const ImageCropControl: React.FC<IImageCropControlProps> = (props) => {
                             overflow: "hidden",
                         }}
                     >
-                        <img
-                            ref={imgRef}
-                            alt="Crop"
-                            src={imageSrc}
-                            onLoad={handleImageLoad}
-                            draggable={false}
-                            style={{
-                                position: "absolute",
-                                left: 0,
-                                top: 0,
-                                width: naturalSize.width,
-                                height: naturalSize.height,
-                                transform: `translate(${transform.translateX}px, ${transform.translateY}px) scale(${transform.scale}) rotate(${rotation}deg)`,
-                                transformOrigin: "0 0",
-                                touchAction: "none",
-                                userSelect: "none",
-                                pointerEvents: "none",
-                            }}
-                        />
+                        {imageSrc ? (
+                            <img
+                                ref={imgRef}
+                                alt="Crop"
+                                src={imageSrc}
+                                onLoad={handleImageLoad}
+                                onError={handleImageError}
+                                draggable={false}
+                                style={{
+                                    position: "absolute",
+                                    left: 0,
+                                    top: 0,
+                                    width: naturalSize.width,
+                                    height: naturalSize.height,
+                                    transform: `translate(${transform.translateX}px, ${transform.translateY}px) scale(${transform.scale}) rotate(${rotation}deg)`,
+                                    transformOrigin: "0 0",
+                                    touchAction: "none",
+                                    userSelect: "none",
+                                    pointerEvents: "none",
+                                }}
+                            />
+                        ) : null}
                     </div>
-                ) : (
+                ) : imageSrc ? (
                     <img
                         ref={imgRef}
                         alt="Crop"
                         src={imageSrc}
                         onLoad={handleImageLoad}
+                        onError={handleImageError}
                         draggable={false}
                         style={{
                             maxWidth: "100%",
@@ -665,7 +682,7 @@ const ImageCropControl: React.FC<IImageCropControlProps> = (props) => {
                             transform: `rotate(${rotation}deg) scale(${scaling})`,
                         }}
                     />
-                )}
+                ) : null}
             </CropWrapper>
             {SHOW_CROP_DEBUG && usePanZoom && (
                 <div

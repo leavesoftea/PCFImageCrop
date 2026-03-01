@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { IInputs } from "../generated/ManifestTypes";
 import { Crop, PixelCrop, convertToPixelCrop } from "react-image-crop";
 import { blankCrop } from "../types/imageCropTypes";
@@ -6,24 +6,33 @@ import { stripQuotes } from "../utils/stringUtils";
 
 /**
  * Custom hook to track the image source and apply crop logic on load or failure.
- * Supports an optional drop override: when set (e.g. from drag-and-drop), that source is used until context image changes.
+ * Host validity: data:image/ and length > 200 so Add Image (varBase64) always reclaims.
+ * Source order: (1) override+internal (2) hostIsValid -> host (3) internal (4) undefined (empty).
+ * When host imageInput changes, index clears override+internal so host wins on next render.
  */
 export function useImageSrc(
   context: ComponentFramework.Context<IInputs>,
   imgRef: React.RefObject<HTMLImageElement>,
   defaultCrop: Crop | undefined,
   setCrop: (crop: Crop | undefined) => void,
-  setCompletedCrop: (crop: PixelCrop) => void
-): { imageSrc: string | undefined; setImageSrcFromDrop: (src: string) => void } {
-  const contextSrc = stripQuotes(context.parameters.imageInput?.raw || undefined);
-  const [dropOverride, setDropOverride] = useState<string | undefined>(undefined);
-
-  // When host sets a new image, clear drop override so context value is used
-  useEffect(() => {
-    setDropOverride(undefined);
-  }, [context.parameters.imageInput?.raw]);
-
-  const effectiveSrc = dropOverride ?? contextSrc;
+  setCompletedCrop: (crop: PixelCrop) => void,
+  internalImageDataUrl: string | undefined,
+  overrideHostImage: boolean
+): { imageSrc: string | undefined; isRealImageSource: boolean } {
+  const rawContext = stripQuotes(context.parameters.imageInput?.raw || undefined);
+  const hostSrc = (rawContext ?? "").trim();
+  const hostIsEmpty = hostSrc === "";
+  const hostIsValid = !hostIsEmpty && hostSrc.startsWith("data:image/") && hostSrc.length > 200;
+  let effectiveSrc: string | undefined;
+  if (overrideHostImage && internalImageDataUrl) {
+    effectiveSrc = internalImageDataUrl;
+  } else if (hostIsValid) {
+    effectiveSrc = hostSrc;
+  } else if (internalImageDataUrl) {
+    effectiveSrc = internalImageDataUrl;
+  } else {
+    effectiveSrc = undefined;
+  }
 
   useEffect(() => {
     const img = imgRef.current;
@@ -72,5 +81,7 @@ export function useImageSrc(
     };
   }, [effectiveSrc, defaultCrop]);
 
-  return { imageSrc: effectiveSrc, setImageSrcFromDrop: setDropOverride };
+  const isRealImageSource = hostIsValid || !!(overrideHostImage && internalImageDataUrl) || !!internalImageDataUrl;
+
+  return { imageSrc: effectiveSrc, isRealImageSource };
 }

@@ -119,8 +119,17 @@
   <data name="ImageCrop_EnableDragDropLoad_Description" xml:space="preserve">
     <value>Allow users to drag an image file from their computer onto the control (web only).</value>
   </data>
+  <data name="ImageCrop_ClearToken_DisplayName" xml:space="preserve">
+    <value>Clear token</value>
+  </data>
+  <data name="ImageCrop_ClearToken_Description" xml:space="preserve">
+    <value>Increment this value to clear/reset the control. Use with a Clear button (e.g. Set(varClearToken, varClearToken + 1)).</value>
+  </data>
   <data name="ImageCrop_ImageInput_Description" xml:space="preserve">
-    <value>The Base64 content of the image to be cropped.</value>
+    <value>The Base64 content of the image to be cropped. Default is a 1x1 transparent PNG placeholder for stable init and drop zone.</value>
+  </data>
+  <data name="ImageCrop_HasImage_Description" xml:space="preserve">
+    <value>Host indicates whether a real user image is provided. Set false to clear/reset the control. Placeholder is not treated as loaded unless true.</value>
   </data>
   <data name="ImageCrop_ImageOutput_Description" xml:space="preserve">
     <value>The cropped image as a Base64 string.</value>
@@ -151,6 +160,24 @@
   </data>
   <data name="ImageCrop_ZoomMultiplier_Description" xml:space="preserve">
     <value>Current zoom multiplier relative to baseScale (0.4–3.0). Bind to a Slider to sync zoom bi-directionally.</value>
+  </data>
+  <data name="ImageCrop_IsImageLoaded_DisplayName" xml:space="preserve">
+    <value>Is image loaded</value>
+  </data>
+  <data name="ImageCrop_IsImageLoaded_Description" xml:space="preserve">
+    <value>True when a real image is loaded (from host imageInput or successful drag-drop). False when cleared via clearToken.</value>
+  </data>
+  <data name="ImageCrop_DroppedImageBase64_DisplayName" xml:space="preserve">
+    <value>Dropped image (Base64)</value>
+  </data>
+  <data name="ImageCrop_DroppedImageBase64_Description" xml:space="preserve">
+    <value>Base64 data URL of the last image dropped onto the control. Use with Drop token to sync to app (e.g. Timer).</value>
+  </data>
+  <data name="ImageCrop_DropToken_DisplayName" xml:space="preserve">
+    <value>Drop token</value>
+  </data>
+  <data name="ImageCrop_DropToken_Description" xml:space="preserve">
+    <value>Increments each time a new image is dropped. Compare with a variable to detect new drops and copy Dropped image (Base64) into your app.</value>
   </data>
   <!-- Default Crop Properties Display Names -->
   <data name="ImageCrop_DefaultUnit_DisplayName" xml:space="preserve">
