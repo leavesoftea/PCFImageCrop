@@ -2,10 +2,10 @@
 <ImportExportXml version="9.1.0.643" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <!-- Unique Name of Cds Solution-->
-    <UniqueName>RAWImageCropControl</UniqueName>
+    <UniqueName>PCFImageCropControl</UniqueName>
     <LocalizedNames>
       <!-- Localized Solution Name in language code -->
-      <LocalizedName description="RAW!ImageCropControl" languagecode="1033" />
+      <LocalizedName description="PCF Image Crop Control" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
     <Version>1.0.12</Version>
@@ -13,21 +13,21 @@
     <Managed>2</Managed>
     <Publisher>
       <!-- Unique Publisher Name of Cds Solution -->
-      <UniqueName>raw</UniqueName>
+      <UniqueName>pcfimagecrop</UniqueName>
       <LocalizedNames>
         <!-- Localized Cds Publisher Name in language code-->
-        <LocalizedName description="raw" languagecode="1033" />
+        <LocalizedName description="Leaves of Tea" languagecode="1033" />
       </LocalizedNames>
       <Descriptions>
         <!-- Description of Cds Publisher in language code -->
-        <Description description="raw" languagecode="1033" />
+        <Description description="PCF components by Leaves of Tea" languagecode="1033" />
       </Descriptions>
       <EMailAddress xsi:nil="true">
       </EMailAddress>
       <SupportingWebsiteUrl xsi:nil="true">
       </SupportingWebsiteUrl>
       <!-- Customization Prefix for the Cds Publisher-->
-      <CustomizationPrefix>raw</CustomizationPrefix>
+      <CustomizationPrefix>lot</CustomizationPrefix>
       <!-- Derived Option Value Prefix for the Customization Prefix of Cds Publisher -->
       <CustomizationOptionValuePrefix>81224</CustomizationOptionValuePrefix>
       <Addresses>

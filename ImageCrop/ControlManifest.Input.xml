@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest>
   <!-- Use a unique namespace to avoid "already created by another publisher" when RAW.ImageCrop exists in the env. -->
-  <control namespace="PCFImageCrop" constructor="ImageCrop" version="0.1.12" display-name-key="ImageCrop_DisplayName" description-key="ImageCrop_Description" control-type="standard">
+  <control namespace="PCFImageCrop" constructor="ImageCrop" version="0.1.14" display-name-key="ImageCrop_DisplayName" description-key="ImageCrop_Description" control-type="standard">
     <!--external-service-usage node declares whether this 3rd party PCF control is using external service or not, if yes, this control will be considered as premium and please also add the external domain it is using.
     If it is not using any external service, please set the enabled="false" and DO NOT add any domain below. The "enabled" will be false by default.
     Example1:
