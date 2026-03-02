@@ -1,0 +1,56 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\ceylo\\Documents\\GitHub\\PCFControls\\ImageCrop\\ImageCrop.pcfproj": {}
+  },
+  "projects": {
+    "C:\\Users\\ceylo\\Documents\\GitHub\\PCFControls\\ImageCrop\\ImageCrop.pcfproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\ceylo\\Documents\\GitHub\\PCFControls\\ImageCrop\\ImageCrop.pcfproj",
+        "projectName": "ImageCrop",
+        "projectPath": "C:\\Users\\ceylo\\Documents\\GitHub\\PCFControls\\ImageCrop\\ImageCrop.pcfproj",
+        "packagesPath": "C:\\Users\\ceylo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ceylo\\Documents\\GitHub\\PCFControls\\ImageCrop\\obj\\",
+        "projectStyle": "PackageReference",
+        "UsingMicrosoftNETSdk": false,
+        "configFilePaths": [
+          "C:\\Users\\ceylo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net462"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net462": {
+            "targetAlias": "net462",
+            "projectReferences": {}
+          }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net462": {
+          "targetAlias": "net462",
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Microsoft.PowerApps.MSBuild.Pcf": {
+              "target": "Package",
+              "version": "[1.*, )"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+C:\Users\ceylo\Documents\GitHub\PCFControls\ImageCrop\obj\Debug\ImageCrop.pcfproj.AssemblyReference.cache
+C:\Users\ceylo\Documents\GitHub\PCFControls\ImageCrop\obj\Debug\ImageCrop.pcfproj.CoreCompileInputs.cache
