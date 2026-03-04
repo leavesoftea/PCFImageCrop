@@ -65,7 +65,7 @@
     <value>Image Output (Base64)</value>
   </data>
   <data name="ImageCrop_DisplayName" xml:space="preserve">
-    <value>Eurasia Image Crop</value>
+    <value>PCF Image Crop</value>
   </data>
   <data name="ImageCrop_Rotation_DisplayName" xml:space="preserve">
     <value>Rotation (degrees)</value>
